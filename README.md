@@ -13,15 +13,15 @@ Command line tools for Google BigQuery
 
 ### List Table
 
-`bquick ls -n [<num-of-tables>]`
+`bquick ls -l [<limit-of-lines>]`
 
-`bquick ls -w [<wildcard-prefix>] -n [50]`
+`bquick ls -w [<wildcard-prefix>] -l [50]`
 
-`bquick ls -w [<wildcard-prefix>] [<start-date>] [<end-date>] -n [50]`
+`bquick ls -w [<wildcard-prefix>] [<start-date>] [<end-date>] -l [50]`
 
-`bquick ls -r [<reg-string>] -n [50]`
+`bquick ls -r [<reg-string>] -l [50]`
 
-`bquick ls -m [<replace-string-with-$-mark>] [<replacement-array>] -n [50]`
+`bquick ls -m [<replace-string-with-$-mark>] [<replacement-array>] -l [50]`
 
 ### Delete Table
 
