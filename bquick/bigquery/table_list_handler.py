@@ -22,7 +22,6 @@ def list_regex_table(bq_client, dataset, regex, limit):
                             WHERE (REGEXP_MATCH(table_id, r\'%s\')) \
                             LIMIT %d" % \
                                 (dataset, regex, limit)
-  print LIST_TABLE_REGEX_QUERY
   query_result = __query(bq_client, dataset, LIST_TABLE_REGEX_QUERY)
   table_list = [row['f'][0]['v'] for row in query_result]
   return table_list
