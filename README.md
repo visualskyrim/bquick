@@ -21,6 +21,13 @@ To login, use following command and follow the instruction given by the tool:
 
 ## Install
 
+### From pip
+
+`pip install bquick`
+
+> You might need root permission.
+
+
 ### From source code
 
 ***Step 1***: Get the source code:

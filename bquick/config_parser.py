@@ -20,8 +20,13 @@ if not os.path.exists(DEFAULT_CONFIG_FOLDER):
 DEFAULT_CONFIG_CONFIG_FILE = os.path.join(DEFAULT_CONFIG_FOLDER, "properties")
 
 if not os.path.exists(DEFAULT_CONFIG_CONFIG_FILE):
-  raise IOError("Can't find gcloud settings file in %s." \
-                % DEFAULT_CONFIG_CONFIG_FILE)
+  DEFAULT_CONFIG_CONFIG_FILE_2 = os.path.join(
+      DEFAULT_CONFIG_FOLDER, "configurations", "config_default")
+  if os.path.exists(DEFAULT_CONFIG_CONFIG_FILE_2):
+    DEFAULT_CONFIG_CONFIG_FILE = DEFAULT_CONFIG_CONFIG_FILE_2
+  else:
+    raise IOError("Can't find gcloud settings file in %s and %s." \
+                % (DEFAULT_CONFIG_CONFIG_FILE, DEFAULT_CONFIG_CONFIG_FILE_2))
 
 CORE_CONFIG_SECTION = "core"
 ACCOUNT_CONFIG_KEY = "account"
