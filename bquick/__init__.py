@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 
-
 from bquick.command_parser import get_command
+from bquick.bigquery import list_table
 
 def main():
 
   """ Main function called to execute the command. """
   try:
     #print 'It works!'
-    args = get_command()
-    print args
+    mode, command = get_command()
+
+    if mode == 'ls':
+      tables = list_table(command)
+      for table_name in tables:
+        print table_name
 
   except Exception as e:
     raise e

@@ -8,7 +8,7 @@ setup(name='bquick',
       author='visualskyrim',
       author_email='visual.skyrim@gmail.com',
       license='MIT',
-      packages=['bquick'],
+      packages=['bquick', 'bquick.bigquery'],
       install_requires=[
       ],
       scripts=['bin/bquick'],

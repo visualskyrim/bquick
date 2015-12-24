@@ -13,7 +13,7 @@ USER_ROOT = os.path.expanduser("~")
 DEFAULT_CONFIG_FOLDER = os.path.join(USER_ROOT, ".config", "gcloud")
 # BQUICK_CONFIG_ROOT = os.path.join(USER_ROOT, ".config", "bquick")
 
-if not os.path.exists(DEFAULT_CONFIG_ROOT):
+if not os.path.exists(DEFAULT_CONFIG_FOLDER):
   raise IOError("Can't find gcloud settings folder in %s." \
                 % DEFAULT_CONFIG_FOLDER)
 

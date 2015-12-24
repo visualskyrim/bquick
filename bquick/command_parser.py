@@ -8,10 +8,10 @@ DEFAULT_START_DATE = "1970-01-01"
 DEFAULT_END_DATE = datetime.datetime.strftime(datetime.datetime.now(),
                                               '%Y-%m-%d')
 
-ListCommand = namedtuple("ListCommand", "dataset")
+ListCommand = namedtuple("ListCommand", "dataset limit")
 ListWildcardCommand = namedtuple("ListWildcardCommand",
-                                 "dataset table_prefix start_date end_date")
-ListRegexCommand = namedtuple("ListRegexCommand", "dataset table_name_pattern")
+                                 "dataset limit table_prefix start_date end_date")
+ListRegexCommand = namedtuple("ListRegexCommand", "dataset limit table_name_pattern")
 
 
 
@@ -59,15 +59,17 @@ def parse_args(argv):
                                   to deletes. Each line represents a table.""")
 
   args = top_parser.parse_args(argv)
-  return __parse_command(args)
+  return args.mode, __parse_command(args)
 
 
 def __parse_command(args):
   # parse args into command
   dataset = args.dataset
   if args.mode == "ls":
+    limit = args.limit
+
     if args.regex is not None:
-      return RegexCommand(dataset=dataset, table_name_pattern=args.regex)
+      return RegexCommand(dataset=dataset, limit=limit, table_name_pattern=args.regex)
     elif args.wildcard is not None:
       wildcard_args = args.wildcard
 
@@ -93,11 +95,12 @@ def __parse_command(args):
                          Please use YYYY-mm-dd instead.")
 
       return ListWildcardCommand(dataset=dataset,
+                                 limit=limit,
                                  table_prefix=table_prefix,
                                  start_date=start_date,
                                  end_date=end_date)
     else:
-      return ListCommand(dataset=dataset)
+      return ListCommand(dataset=dataset, limit=limit)
   elif args.mode == "del":
     pass
   else:
