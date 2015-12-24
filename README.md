@@ -14,7 +14,7 @@ To use bquick, you have to and only have to install [Google Cloud SDK](https://c
 
 To login, use following command and follow the instruction given by the tool:
 
-`gcloud login`
+`gcloud auth login`
 
 
 > For detailed information, refer to [Google Cloud SDK](https://cloud.google.com/sdk/).
