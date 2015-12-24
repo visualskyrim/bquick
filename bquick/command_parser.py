@@ -21,7 +21,7 @@ def get_command():
 def parse_args(argv):
   """This function will parse the args command line args.
   The function will return one of:
-    - RegexCommand
+    - ListRegexCommand
     - ListWildcardCommand
     - ListCommand
   """
@@ -69,7 +69,7 @@ def __parse_command(args):
     limit = args.limit
 
     if args.regex is not None:
-      return RegexCommand(dataset=dataset, limit=limit, table_name_pattern=args.regex)
+      return ListRegexCommand(dataset=dataset, limit=limit, table_name_pattern=args.regex)
     elif args.wildcard is not None:
       wildcard_args = args.wildcard
 
