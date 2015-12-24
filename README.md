@@ -5,28 +5,73 @@
 Command line tools for Google BigQuery
 
 
-> This project assumes you have installed [Google Cloud SDK](https://cloud.google.com/sdk/)
+> This project assumes you have installed [Google Cloud SDK](https://cloud.google.com/sdk/), and have logged in.
+
+
+## Prerequisite
+
+To use bquick, you have to and only have to install [Google Cloud SDK](https://cloud.google.com/sdk/) and login with your account.
+
+To login, use following command and follow the instruction given by the tool:
+
+`gcloud login`
+
+
+> For detailed information, refer to [Google Cloud SDK](https://cloud.google.com/sdk/).
 
 ## Install
+
+### From source code
+
+***Step 1***: Get the source code:
+
+`git clone git@github.com:visualskyrim/bquick.git`
+
+***Step 2***: Install
+
+`python setup.py install`
+
 
 ## Usage
 
 ### List Table
 
-`bquick ls -n [<num-of-tables>]`
+***List all tables:***
 
-`bquick ls -w [<wildcard-prefix>] -n [50]`
+`bquick <dataset> ls [-l <rows-to-show>]`
 
-`bquick ls -w [<wildcard-prefix>] [<start-date>] [<end-date>] -n [50]`
+```
+bquick test_dateset ls -l 20
+```
 
-`bquick ls -r [<reg-string>] -n [50]`
+> The `<rows-to-show>` is defaultly 50
 
-`bquick ls -m [<replace-string-with-$-mark>] [<replacement-array>] -n [50]`
 
-### Delete Table
+***List tables that match wildcard prefix***
 
-`bquick del -f [<table-list-file>]`
+`bquick <dataset> ls -w <wildcard-prefix> [-l <rows-to-show>]`
 
-`bquick del -w [<wildcard-prefix>]`
+Get all the tables with given wildcard prefix.
 
-`bquick del -w [<wildcard-prefix>] [<start-date>] [<end-date>]`
+`bquick <dataset> ls -w <wildcard-prefix> <start-date> <end-date> [-l <rows-to-show>]`
+
+Get all the table with given wildcard and within the given date range.
+
+Arguments `<start-date>` and `<end-date>` should be in format of `YYYY-mm-dd`.
+
+```
+bquick test_dateset ls -w test_table 2015-12-12 2015-12-24
+```
+
+> About wildcard functions, please refer to [BigQuery Query Reference](https://cloud.google.com/bigquery/query-reference?hl=en#tablewildcardfunctions).
+
+
+***List tables that match regex expression***
+
+`bquick <dataset> ls -r <reg-string> [-l <rows-to-show>]`
+
+```
+bquick test_dataset ls -r 'test_table_\w{32}\d{8}'
+```
+
+> The `<reg-string>` should be enclosed within single-quote.
