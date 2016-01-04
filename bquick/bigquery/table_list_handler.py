@@ -71,7 +71,8 @@ def __query(bq_client, dataset, query_text):
         'projectId': BQ_CONFIG.project,
         'datasetId': dataset
     },
-    "query": query_text
+    "query": query_text,
+    "useQueryCache": False
   }
 
   # fire query
