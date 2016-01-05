@@ -51,7 +51,7 @@ To login, use following command and follow the instruction given by the tool:
 bquick test_dateset ls -l 20
 ```
 
-> The `<rows-to-show>` is defaultly 50
+> The `<rows-to-show>` is default 50
 
 
 ***List tables that match wildcard prefix***

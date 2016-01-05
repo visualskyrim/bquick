@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-
-from bquick.config_parser import get_config
+#from bquick.bigquery import BQ_CONFIG
 
 TIME_OUT_SEC = 100
 QUERY_MAX_RESULT = 5000
@@ -122,5 +121,3 @@ def __query(bq_client, dataset, query_text):
       next_token = result_resp['pageToken']
 
   return result_set
-
-BQ_CONFIG = get_config()

@@ -10,7 +10,8 @@ setup(name='bquick',
       license='MIT',
       packages=['bquick', 'bquick.bigquery'],
       install_requires=[
-        'google-api-python-client', 'oauth2client'
+        'google-api-python-client',
+        'oauth2client'
       ],
       scripts=['bin/bquick'],
       zip_safe=False)
