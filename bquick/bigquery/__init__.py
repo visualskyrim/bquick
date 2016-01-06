@@ -11,7 +11,6 @@ from apiclient.discovery import build
 from oauth2client.client import GoogleCredentials
 from urllib2 import HTTPError
 
-from bquick.config_parser import get_config
 from bquick.bigquery import table_list_handler, table_delete_handler
 from bquick.command_parser import ListCommand, \
                                   ListRegexCommand, \
@@ -30,18 +29,20 @@ def list_table(list_command):
   limit = list_command.limit
 
   if isinstance(list_command, ListCommand):
-    return table_list_handler.list_all_table(GOOGLE_BIGQUERY_CLIENT, dataset, limit)
+    return table_list_handler.list_all_table(GOOGLE_BIGQUERY_CLIENT,
+                                             dataset,
+                                             limit)
   elif isinstance(list_command, ListRegexCommand):
     return table_list_handler.list_regex_table(GOOGLE_BIGQUERY_CLIENT,
-                                        dataset,
-                                        list_command.table_name_pattern,
-                                        limit)
+                                               dataset,
+                                               list_command.table_name_pattern,
+                                               limit)
   elif isinstance(list_command, ListWildcardCommand):
     return table_list_handler.list_wildcard_table(GOOGLE_BIGQUERY_CLIENT,
-                                           dataset,
-                                           list_command.table_prefix,
-                                           list_command.start_date,
-                                           list_command.end_date)
+                                                  dataset,
+                                                  list_command.table_prefix,
+                                                  list_command.start_date,
+                                                  list_command.end_date)
   else:
     raise ValueError("Unrecognised command type.")
 
@@ -57,9 +58,15 @@ def delete_table(del_command):
     table_delete_handler.delete_table_using_file(
         GOOGLE_BIGQUERY_CLIENT, dataset, del_command.delete_file)
   elif isinstance(del_command, DeleteWildcardCommand):
-    table_delete_handler.
+    table_delete_handler.delete_table_with_wildcard(GOOGLE_BIGQUERY_CLIENT,
+                                                    dataset,
+                                                    del_command.table_prefix,
+                                                    del_command.start_date,
+                                                    del_command.end_date)
   elif isinstance(del_command, DeleteRegexCommand):
-    pass
+    table_delete_handler.delete_table_with_regex(GOOGLE_BIGQUERY_CLIENT,
+                                                 dataset,
+                                                 table_name_pattern)
   else:
     raise ValueError("Unrecognised command type.")
 
@@ -104,4 +111,3 @@ def __get_bigquery_service():
   return build('bigquery', 'v2', credentials=credentials)
 
 GOOGLE_BIGQUERY_CLIENT = __get_bigquery_service()
-BQ_CONFIG = get_config()

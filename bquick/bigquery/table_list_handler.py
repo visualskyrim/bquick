@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-#from bquick.bigquery import BQ_CONFIG
+from bquick.config_parser import get_config
 
 TIME_OUT_SEC = 100
 QUERY_MAX_RESULT = 5000
+BQ_CONFIG = get_config()
 
 
 def list_all_table(bq_client, dataset, limit):
