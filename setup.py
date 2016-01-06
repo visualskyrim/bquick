@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='bquick',
-      version='0.1.5',
+      version='0.1.6',
       description='The command line tool for BigQuery management.',
       url='http://github.com/visualskyrim/bquick',
       author='visualskyrim',
@@ -10,7 +10,8 @@ setup(name='bquick',
       license='MIT',
       packages=['bquick', 'bquick.bigquery'],
       install_requires=[
-        'google-api-python-client', 'oauth2client'
+        'google-api-python-client',
+        'oauth2client'
       ],
       scripts=['bin/bquick'],
       zip_safe=False)
