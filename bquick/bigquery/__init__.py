@@ -42,7 +42,8 @@ def list_table(list_command):
                                                   dataset,
                                                   list_command.table_prefix,
                                                   list_command.start_date,
-                                                  list_command.end_date)
+                                                  list_command.end_date,
+                                                  limit)
   else:
     raise ValueError("Unrecognised command type.")
 
@@ -66,7 +67,7 @@ def delete_table(del_command):
   elif isinstance(del_command, DeleteRegexCommand):
     table_delete_handler.delete_table_with_regex(GOOGLE_BIGQUERY_CLIENT,
                                                  dataset,
-                                                 table_name_pattern)
+                                                 del_command.table_name_pattern)
   else:
     raise ValueError("Unrecognised command type.")
 

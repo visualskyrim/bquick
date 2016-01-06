@@ -29,7 +29,7 @@ def list_regex_table(bq_client, dataset, regex, limit):
 def list_wildcard_table(bq_client,
                         dataset,
                         wildcard_prefix,
-                        start_date, end_date):
+                        start_date, end_date, limit):
   wildcard_prefix_len = len(wildcard_prefix)
   start_date_str = start_date.replace('-', '')
   end_date_str = end_date.replace('-', '')
@@ -41,11 +41,12 @@ def list_wildcard_table(bq_client,
                                FROM %s.__TABLES__ \
                                WHERE SUBSTR(table_id, 0, %d) == \'%s\' \
                                AND table_id >= \'%s\' \
-                               AND table_id <= \'%s\'" % (
+                               AND table_id <= \'%s\' \
+                               LIMIT %d" % (
                                    dataset, \
                                    wildcard_prefix_len, \
                                    wildcard_prefix, \
-                                   start_table_id, end_table_id)
+                                   start_table_id, end_table_id, limit)
 
   query_result = __query(bq_client, dataset, LIST_TABLE_WILDCARD_QUERY)
   table_list = [row['f'][0]['v'] for row in query_result]

@@ -32,11 +32,15 @@ To login, use following command and follow the instruction given by the tool:
 
 ***Step 1***: Get the source code:
 
-`git clone git@github.com:visualskyrim/bquick.git`
+```
+git clone git@github.com:visualskyrim/bquick.git
+```
 
 ***Step 2***: Install
 
-`python setup.py install`
+```
+python setup.py install
+```
 
 
 ## Usage
@@ -45,7 +49,9 @@ To login, use following command and follow the instruction given by the tool:
 
 ***List all tables:***
 
-`bquick <dataset> ls [-l <rows-to-show>]`
+```
+bquick <dataset> ls [-l <rows-to-show>]
+```
 
 ```
 bquick test_dateset ls -l 20
@@ -56,11 +62,15 @@ bquick test_dateset ls -l 20
 
 ***List tables that match wildcard prefix***
 
-`bquick <dataset> ls -w <wildcard-prefix> [-l <rows-to-show>]`
+```
+bquick <dataset> ls -w <wildcard-prefix> [-l <rows-to-show>]
+```
 
 Get all the tables with given wildcard prefix.
 
-`bquick <dataset> ls -w <wildcard-prefix> <start-date> <end-date> [-l <rows-to-show>]`
+```
+bquick <dataset> ls -w <wildcard-prefix> <start-date> <end-date> [-l <rows-to-show>]
+```
 
 Get all the table with given wildcard and within the given date range.
 
@@ -82,3 +92,48 @@ bquick test_dataset ls -r 'test_table_\w{32}\d{8}'
 ```
 
 > The `<reg-string>` should be enclosed within single-quote.
+
+### Delete Table
+
+Delete tables in BigQuery.
+
+All the tables to be deleted will be confirmed before the deletion.
+
+***Delete table by name:***
+
+```
+bquick <dataset> del -n <table-name>
+```
+
+Delete the table with given name.
+
+
+***Delete tables in the file***
+
+```
+bquick <dataset> del -f <tables-file>
+```
+
+All the tables with the name in given file will be deleted.
+Table name should be one line in the file.
+
+> `<tables-file>` could be either absolute path or relative path pointing to the file.
+
+
+***Delete tables matching the regex expression:***
+
+```
+bquick <dataset> del -r <table-name-pattern>
+```
+
+Delete the tables with the name that matches the regex expression.
+
+> `<table-name-pattern>` should be enclosed by single-quote.
+
+***Delete tables matching the wildcard prefix***
+
+```
+bquick <dataset> del -w <wildcard-prefix> <start-date> <end-date>
+```
+
+Delete all the tables that match `<wildcard-prefix>` and between the `<start-date>` and `<end-date>`.

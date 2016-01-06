@@ -23,7 +23,7 @@ def delete_table_using_file(bq_client, dataset, file_path,
                             ignore_confirm=False):
   """Delete all the tables in the given file.
   """
-  arg_file_path = del_command.delete_file
+  arg_file_path = file_path
   if os.path.isabs(arg_file_path):
     delete_file_path = arg_file_path
   else:
@@ -34,7 +34,7 @@ def delete_table_using_file(bq_client, dataset, file_path,
     raise ValueError("Given file path doesn't exist: %s" % arg_file_path)
 
   with open(delete_file_path) as table_list_file:
-    table_list = table_list_file.readlines()
+    table_list = [line.rstrip() for line in table_list_file.readlines()]
     __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
 
 def delete_table_with_wildcard(bq_client,
@@ -49,7 +49,8 @@ def delete_table_with_wildcard(bq_client,
                                                       dataset,
                                                       table_prefix,
                                                       start_date,
-                                                      end_date)
+                                                      end_date,
+                                                      sys.maxint)
   __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
 
 def delete_table_with_regex(bq_client, dataset, table_name_pattern,
