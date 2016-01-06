@@ -11,15 +11,22 @@ DEFAULT_END_DATE = datetime.datetime.strftime(datetime.datetime.now(),
 # list commands
 ListCommand = namedtuple("ListCommand", "dataset limit")
 ListWildcardCommand = namedtuple("ListWildcardCommand",
-                                 "dataset limit table_prefix start_date end_date")
-ListRegexCommand = namedtuple("ListRegexCommand", "dataset limit table_name_pattern")
+                                 "dataset \
+                                  limit \
+                                  table_prefix \
+                                  start_date \
+                                  end_date")
+ListRegexCommand = namedtuple("ListRegexCommand", "dataset \
+                                                   limit \
+                                                   table_name_pattern")
 
 # delete commands
 DeleteNamedCommand = namedtuple("DeleteCommand", "dataset table_name")
 DeleteFileCommand = namedtuple("DeleteFileCommand", "dataset delete_file")
 DeleteWildcardCommand = namedtuple("DeleteWildcardCommand",
-                                 "dataset table_prefix start_date end_date")
-DeleteRegexCommand = namedtuple("DeleteRegexCommand", "dataset table_name_pattern")
+                                   "dataset table_prefix start_date end_date")
+DeleteRegexCommand = namedtuple("DeleteRegexCommand", "dataset \
+                                                       table_name_pattern")
 
 
 def get_command():
