@@ -137,3 +137,48 @@ bquick <dataset> del -w <wildcard-prefix> <start-date> <end-date>
 ```
 
 Delete all the tables that match `<wildcard-prefix>` and between the `<start-date>` and `<end-date>`.
+
+
+### Copy Table
+
+Copy tables in BigQuery within the dataset and cross the dataset.
+
+
+***Copy tables in the file***
+
+Copy tables from one dataset to another.
+
+> In BigQuery, copying tables actually consumes the job.
+> To make sure the copying doesn't over used, there is running jobs check before copy any table.
+> Script will wait until the job execute is availible in your project.
+>
+> More details about the limit on jobs, please refer to [quota policy](https://cloud.google.com/bigquery/quota-policy).
+
+```
+bquick <dataset> cp -d <dest-dataset> -f <tables-file>
+```
+
+All the tables with the name in given file and the `<dataset>` will be copied into `<dest-dataset>`.
+Table name should be one line inthe file.
+
+> `<tables-file>` could be either absolute path or relative path pointing to the file.
+
+
+***Copy tables that match regex pattern***
+
+```
+bquick <dataset> cp -d <dest-dataset> -r <table-name-pattern>
+```
+
+Copy all the tables in the `<dataset>` to the `<dest-dataset>` that match the `<table-name-pattern>`.
+
+> `<table-name-pattern>` should be enclosed by single-quote.
+
+
+***Copy tables that match wildcard pattern***
+
+```
+bquick <dataset> cp -d <dest-dataset> -w <wildcard-prefix> <start-date> <end-date>
+```
+
+Copy all the tables that match `<wildcard-prefix>` and between the `<start-date>` and `<end-date>`.

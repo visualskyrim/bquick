@@ -14,28 +14,24 @@ DeleteProcessParam = namedtuple("DeleteProcessParam", "bq_client \
                                                        dataset \
                                                        table_name")
 
+
 def delete_table_by_name(bq_client, dataset, table_name, ignore_confirm=False):
   """Delete the table with the given name.
   """
   __delete_table_list(bq_client, dataset, [table_name], ignore_confirm)
 
-def delete_table_using_file(bq_client, dataset, file_path,
+
+def delete_table_using_file(bq_client, dataset, delete_file_path,
                             ignore_confirm=False):
   """Delete all the tables in the given file.
   """
-  arg_file_path = file_path
-  if os.path.isabs(arg_file_path):
-    delete_file_path = arg_file_path
-  else:
-    working_path = os.getcwd()
-    delete_file_path = os.path.join(working_path, arg_file_path)
-
   if not os.path.exists(delete_file_path):
     raise ValueError("Given file path doesn't exist: %s" % arg_file_path)
 
   with open(delete_file_path) as table_list_file:
     table_list = [line.rstrip() for line in table_list_file.readlines()]
     __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
+
 
 def delete_table_with_wildcard(bq_client,
                                dataset,
@@ -52,6 +48,7 @@ def delete_table_with_wildcard(bq_client,
                                                       end_date,
                                                       sys.maxint)
   __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
+
 
 def delete_table_with_regex(bq_client, dataset, table_name_pattern,
                             ignore_confirm=False):
@@ -87,6 +84,7 @@ def __delete_table_list(bq_client, dataset, table_name_list, ignore_confirm):
                                table_name=table_name)
     __delete_table_process(param)
 
+
 def __confirm_delete(dataset, table_name_list):
   """This function will block process and ask for confirmation.
   All the table names will be shown.
@@ -108,6 +106,7 @@ def __confirm_delete(dataset, table_name_list):
     else:
       print "Please enter [y or n]"
 
+
 def __delete_table_process(param):
   """Delete table with compressed param:
   Args:
@@ -121,7 +120,6 @@ def __delete_table_process(param):
   table_name = param.table_name
 
   __delete_table(bq_client, dataset, table_name)
-
 
 
 def __delete_table(bq_client, dataset, table_name):
