@@ -10,6 +10,7 @@ from bquick.config_parser import get_config
 from bquick.bigquery import table_list_handler, utils
 
 BQ_CONFIG = get_config()
+COPY_QUERY = "SELECT * FROM %s.%s"
 
 
 def copy_table_file(bq_client, dataset, dest, file_path):
@@ -97,24 +98,6 @@ def _copy_table_list(
 
 def __copy_table(
         bq_client, org_dataset, dest_dataset, table_name, dest_table_name):
-  job_data = {
-      'configuration': {
-          "copy": {
-              "writeDisposition": "WRITE_APPEND",
-              "sourceTable": {
-                  "projectId": BQ_CONFIG.project,
-                  "tableId": table_name,
-                  "datasetId": org_dataset
-              },
-              "destinationTable": {
-                  "projectId": BQ_CONFIG.project,
-                  "tableId": dest_table_name,
-                  "datasetId": dest_dataset
-              }
-          }
-      }
-  }
-  resp = bq_client.jobs() \
-      .insert(projectId=BQ_CONFIG.project, body=job_data) \
-      .execute(num_retries=10)
-  return resp
+  copy_table_content = COPY_QUERY % (org_dataset, table_name)
+  return utils.query_into(bq_client, table_name, dest_table_name,
+                          copy_table_content, org_dataset, dest_dataset)

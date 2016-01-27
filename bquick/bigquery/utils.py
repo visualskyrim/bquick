@@ -40,6 +40,42 @@ def get_table_packages(table_list, package_size=JOB_LAUNCH_SIZE):
   return list(__chunks(table_list, package_size))
 
 
+def query_into(bq_client, table_name, dest_table_name, query_content, origin_dataset_name, dest_dataset_name):
+  print "query data from [%s.%s] to [%s:%s]" % (origin_dataset_name, table_name, dest_dataset_name, table_name)
+
+  project_id = BQ_CONFIG.project
+  job_body = {
+      'jobReference': {
+          'projectId': project_id
+      },
+      "configuration": {
+          "query": {
+              "query": query_content,
+              "destinationTable": {
+                  "projectId": project_id,
+                  "datasetId": dest_dataset_name,
+                  "tableId": dest_table_name
+              },
+              "defaultDataset": {
+                  "projectId": project_id,
+                  "datasetId": origin_dataset_name
+              },
+              "createDisposition": "CREATE_IF_NEEDED",
+              "writeDisposition": "WRITE_APPEND",
+              "allowLargeResult": True
+          }
+      }
+  }
+
+  resp = bq_client.jobs().insert(
+      projectId=project_id, body=job_body).execute()
+
+  if 'jobReference' in resp and 'jobId' in resp['jobReference']:
+    return resp['jobReference']['jobId']
+  else:
+    raise ValueError("Can't track job.")
+
+
 def __get_job_status(bq_client, job_id):
   project_id = BQ_CONFIG.project
   job_status = bq_client.jobs().get(

@@ -119,36 +119,8 @@ def __query_out_remain_data(bq_client, table_name, condition, origin_dataset_nam
   project_id = BQ_CONFIG.project
   select_remain_query_content = SELECT_REMAIN_QUERY % (
       origin_dataset_name, table_name, condition)
-  job_body = {
-      'jobReference': {
-          'projectId': project_id
-      },
-      "configuration": {
-          "query": {
-              "query": select_remain_query_content,
-              "destinationTable": {
-                  "projectId": project_id,
-                  "datasetId": temp_dataset_name,
-                  "tableId": table_name
-              },
-              "defaultDataset": {
-                  "projectId": project_id,
-                  "datasetId": origin_dataset_name
-              },
-              "createDisposition": "CREATE_IF_NEEDED",
-              "writeDisposition": "WRITE_APPEND",
-              "allowLargeResult": True
-          }
-      }
-  }
-
-  resp = bq_client.jobs().insert(
-      projectId=project_id, body=job_body).execute()
-
-  if 'jobReference' in resp and 'jobId' in resp['jobReference']:
-    return resp['jobReference']['jobId']
-  else:
-    raise ValueError("Can't track job.")
+  return utils.query_into(
+      bq_client, table_name, table_name, select_remain_query_content, origin_dataset_name, temp_dataset_name)
 
 
 def __delete_temp_dataset(bq_client, temp_dataset_name):
