@@ -11,34 +11,36 @@ DEFAULT_END_DATE = datetime.datetime.strftime(datetime.datetime.now(),
 
 # list commands
 ListCommand = namedtuple("ListCommand", "dataset limit")
-ListWildcardCommand = namedtuple("ListWildcardCommand",
-                                 "dataset \
-                                  limit \
-                                  table_prefix \
-                                  start_date \
-                                  end_date")
-ListRegexCommand = namedtuple("ListRegexCommand", "dataset \
-                                                   limit \
-                                                   table_name_pattern")
+ListWildcardCommand = namedtuple(
+    "ListWildcardCommand", "dataset limit table_prefix start_date end_date")
+ListRegexCommand = namedtuple(
+    "ListRegexCommand", "dataset limit table_name_pattern")
 
 # delete commands
 DeleteNamedCommand = namedtuple("DeleteCommand", "dataset table_name")
 DeleteFileCommand = namedtuple("DeleteFileCommand", "dataset delete_file")
-DeleteWildcardCommand = namedtuple("DeleteWildcardCommand",
-                                   "dataset table_prefix start_date end_date")
-DeleteRegexCommand = namedtuple("DeleteRegexCommand", "dataset \
-                                                       table_name_pattern")
+DeleteWildcardCommand = namedtuple(
+    "DeleteWildcardCommand", "dataset table_prefix start_date end_date")
+DeleteRegexCommand = namedtuple(
+    "DeleteRegexCommand", "dataset table_name_pattern")
 
 # copy commands
 CopyFileCommand = namedtuple("CopyFileCommand", "dataset dest copy_file")
-CopyWildcardCommand = namedtuple("CopyWildcardCommand", "dataset \
-                                                         dest \
-                                                         table_prefix \
-                                                         start_date \
-                                                         end_date")
-CopyRegexCommand = namedtuple("CopyRegexCommand", "dataset \
-                                                      dest \
-                                                      table_name_pattern")
+CopyWildcardCommand = namedtuple(
+    "CopyWildcardCommand", "dataset dest table_prefix start_date end_date")
+CopyRegexCommand = namedtuple(
+    "CopyRegexCommand", "dataset dest table_name_pattern")
+
+# data delete commands
+DataDeleteNamedCommand = namedtuple(
+    "DataDeleteCommand", "dataset condition table_name")
+DataDeleteFileCommand = namedtuple(
+    "DataDeleteFileCommand", "dataset condition delete_file")
+DataDeleteWildcardCommand = namedtuple(
+    "DataDeleteWildcardCommand",
+    "dataset condition table_prefix start_date end_date")
+DataDeleteRegexCommand = namedtuple(
+    "DataDeleteRegexCommand", "dataset condition table_name_pattern")
 
 
 def get_command():
@@ -75,10 +77,7 @@ def parse_args(argv):
   del_ex_group = __add_wildcard_arg(del_ex_group)
   del_ex_group = __add_regex_arg(del_ex_group)
   del_ex_group = __add_file_arg(del_ex_group)
-
-  del_ex_group.add_argument("-n",
-                            "--name",
-                            help="""The name of the table to be deleted.""")
+  del_ex_group = __add_name_arg(del_ex_group)
 
   # parser for copying tables
   cp_parser = sub_parsers.add_parser("cp", description="Mode: copy tables.")
@@ -90,6 +89,19 @@ def parse_args(argv):
   cp_ex_group = __add_regex_arg(cp_ex_group)
   cp_ex_group = __add_wildcard_arg(cp_ex_group)
   cp_ex_group = __add_file_arg(cp_ex_group)
+
+  # parser for delete data from tables
+  ddel_parser = sub_parsers.add_parser(
+      "ddel", description="Mode: delete data.")
+  ddel_parser.add_argument("-c",
+                           "--condition",
+                           help="The condition to delete row.",
+                           default=None)
+  ddel_ex_group = ddel_parser.add_mutually_exclusive_group()
+  ddel_ex_group = __add_wildcard_arg(ddel_ex_group)
+  ddel_ex_group = __add_regex_arg(ddel_ex_group)
+  ddel_ex_group = __add_file_arg(ddel_ex_group)
+  ddel_ex_group = __add_name_arg(ddel_ex_group)
 
   args = top_parser.parse_args(argv)
   return args.mode, __parse_command(args)
@@ -119,6 +131,13 @@ def __add_file_arg(arg_collection):
       help="""The file which contains the list of names \
             of tables to deletes. \
             Each line represents a table.""")
+  return arg_collection
+
+
+def __add_name_arg(arg_collection):
+  arg_collection.add_argument("-n",
+                              "--name",
+                              help="""The name of the table to be matched.""")
   return arg_collection
 
 
@@ -189,6 +208,9 @@ def __parse_command(args):
                              copy_file=__get_abs_file_path(args.file))
     else:
       raise ValueError("Unrecognised copy mode.")
+  elif args.mode == "ddel":
+    if args.condition is None:
+
   else:
     raise ValueError("Unrecognised mode: %s" % args.mode)
 
