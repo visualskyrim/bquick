@@ -82,8 +82,8 @@ def copy_table(cp_command):
   dest = cp_command.dest
 
   if isinstance(cp_command, CopyFileCommand):
-    copy_file_path = del_command.delete_file
-    if not os.path.exists(arg_file_path):
+    copy_file_path = cp_command.copy_file
+    if not os.path.exists(copy_file_path):
       raise ValueError("Given file path doesn't exist: %s" % copy_file_path)
 
     table_copy_handler.copy_table_file(
@@ -102,31 +102,6 @@ def copy_table(cp_command):
     table_copy_handler.copy_table_regex(
         GOOGLE_BIGQUERY_CLIENT, dataset, dest, cp_command.table_name_pattern)
 
-  else:
-    raise ValueError("Unrecognised delete command.")
-
-
-def __get_copy_tables(cp_command):
-  dataset = cp_command.dataset
-
-  if isinstance(cp_command, CopyFileCommand):
-    arg_file_path = del_command.delete_file
-    if not os.path.exists(arg_file_path):
-      raise ValueError("Given file path doesn't exist: %s" % arg_file_path)
-
-    with open(arg_file_path) as table_list_file:
-      return table_list_file.readlines()
-  elif isinstance(cp_command, CopyWildcardCommand):
-    return table_list_handler.list_wildcard_table(GOOGLE_BIGQUERY_CLIENT,
-                                                  dataset,
-                                                  del_command.table_prefix,
-                                                  del_command.start_date,
-                                                  del_command.end_date)
-  elif isinstance(cp_command, CopyRegexCommand):
-    return table_list_handler.list_regex_table(GOOGLE_BIGQUERY_CLIENT,
-                                               dataset,
-                                               del_command.table_name_pattern,
-                                               sys.maxint)
   else:
     raise ValueError("Unrecognised delete command.")
 

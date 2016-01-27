@@ -110,6 +110,7 @@ def __copy_table(
   job_data = {
       'configuration': {
           "copy": {
+              "writeDisposition": "WRITE_APPEND",
               "sourceTable": {
                   "projectId": BQ_CONFIG.project,
                   "tableId": table_name,
