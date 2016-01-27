@@ -18,7 +18,7 @@ DeleteProcessParam = namedtuple("DeleteProcessParam", "bq_client \
 def delete_table_by_name(bq_client, dataset, table_name, ignore_confirm=False):
   """Delete the table with the given name.
   """
-  __delete_table_list(bq_client, dataset, [table_name], ignore_confirm)
+  _delete_table_list(bq_client, dataset, [table_name], ignore_confirm)
 
 
 def delete_table_using_file(bq_client, dataset, delete_file_path,
@@ -30,7 +30,7 @@ def delete_table_using_file(bq_client, dataset, delete_file_path,
 
   with open(delete_file_path) as table_list_file:
     table_list = [line.rstrip() for line in table_list_file.readlines()]
-    __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
+    _delete_table_list(bq_client, dataset, table_list, ignore_confirm)
 
 
 def delete_table_with_wildcard(bq_client,
@@ -47,7 +47,7 @@ def delete_table_with_wildcard(bq_client,
                                                       start_date,
                                                       end_date,
                                                       sys.maxint)
-  __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
+  _delete_table_list(bq_client, dataset, table_list, ignore_confirm)
 
 
 def delete_table_with_regex(bq_client, dataset, table_name_pattern,
@@ -58,10 +58,10 @@ def delete_table_with_regex(bq_client, dataset, table_name_pattern,
                                                    dataset,
                                                    table_name_pattern,
                                                    sys.maxint)
-  __delete_table_list(bq_client, dataset, table_list, ignore_confirm)
+  _delete_table_list(bq_client, dataset, table_list, ignore_confirm)
 
 
-def __delete_table_list(bq_client, dataset, table_name_list, ignore_confirm):
+def _delete_table_list(bq_client, dataset, table_name_list, ignore_confirm):
   """Delete all the tables in the list
   """
   if not ignore_confirm:

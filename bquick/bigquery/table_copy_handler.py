@@ -20,7 +20,7 @@ def copy_table_file(bq_client, dataset, dest, file_path):
 
   with open(file_path) as table_list_file:
     table_list = [line.rstrip() for line in table_list_file.readlines()]
-  __copy_table_list(bq_client, dataset, dest, table_list)
+  _copy_table_list(bq_client, dataset, dest, table_list)
 
 
 def copy_table_regex(bq_client, dataset, dest, table_name_pattern):
@@ -31,7 +31,7 @@ def copy_table_regex(bq_client, dataset, dest, table_name_pattern):
       dataset,
       table_name_pattern,
       sys.maxint)
-  __copy_table_list(bq_client, dataset, dest, table_list)
+  _copy_table_list(bq_client, dataset, dest, table_list)
 
 
 def copy_table_wildcard(
@@ -45,10 +45,10 @@ def copy_table_wildcard(
       start_date,
       end_date,
       sys.maxint)
-  __copy_table_list(bq_client, dataset, dest, table_list)
+  _copy_table_list(bq_client, dataset, dest, table_list)
 
 
-def __copy_table_list(
+def _copy_table_list(
         bq_client,
         org_dataset,
         dest_dataset,

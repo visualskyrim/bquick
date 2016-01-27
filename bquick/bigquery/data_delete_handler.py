@@ -7,7 +7,7 @@ import copy
 from collections import namedtuple
 from multiprocessing import Pool
 from bquick.config_parser import get_config
-from bquick.bigquery import table_list_handler, table_delete_handler, utils
+from bquick.bigquery import table_list_handler, table_delete_handler, table_copy_handler, utils
 
 BQ_CONFIG = get_config()
 
@@ -67,6 +67,7 @@ def __delete_data_process(bq_client, dataset, condition, table_name_list):
   # get data we need to temp dataset with the same table name
   job_table_map = {}
 
+  print "Create tables with data remain."
   table_package_list = utils.get_table_packages(table_name_list)
   for table_name_package in table_package_list:
     for table_name in table_name_package:
@@ -77,14 +78,22 @@ def __delete_data_process(bq_client, dataset, condition, table_name_list):
     utils.thruhold_jobs(bq_client)
 
   # wait job to finish
+  print "Wait for all temp tables are created."
   utils.wait_all_job_finish(bq_client, job_table_map.keys())
 
+  # TODO: validate the temp data
+
   # delete the origin table
+  print "Delete origin tables."
+  table_delete_handler._delete_table_list(
+      bq_client, dataset, table_name_list, ignore_confirm=True)
 
   # copy table with the data we want to the origin dataset
+  print "Copy the remaining data."
+  table_copy_handler._copy_table_list(
+      bq_client, temp_dataset_name, dataset, table_name_list, ignore_confirm=True)
 
-  # delete the temp dataset
-  pass
+  # TODO: delete the temp dataset
 
 
 def __create_temp_dataset(bq_client):
