@@ -135,9 +135,10 @@ def __add_file_arg(arg_collection):
 
 
 def __add_name_arg(arg_collection):
-  arg_collection.add_argument("-n",
-                              "--name",
-                              help="""The name of the table to be matched.""")
+  arg_collection.add_argument(
+      "-n",
+      "--name",
+      help="""The name of the table to be matched.""")
   return arg_collection
 
 
@@ -210,6 +211,34 @@ def __parse_command(args):
       raise ValueError("Unrecognised copy mode.")
   elif args.mode == "ddel":
     if args.condition is None:
+      raise ValueError("No deleting condition.")
+
+    condition = args.condition
+    if args.regex is not None:
+      return DataDeleteRegexCommand(
+          dataset=dataset, condition=condition, table_name_pattern=args.regex)
+
+    elif args.wildcard is not None:
+      table_prefix, start_date, end_date = \
+          __extract_wildcard_command_parts(args.wildcard)
+      return DataDeleteWildcardCommand(
+          dataset=dataset,
+          condition=condition,
+          table_prefix=table_prefix,
+          start_date=start_date,
+          end_date=end_date)
+
+    elif args.file is not None:
+      return DataDeleteFileCommand(
+          dataset=dataset,
+          condition=condition,
+          delete_file=__get_abs_file_path(args.file))
+
+    elif args.name is not None:
+      return DataDeleteNamedCommand(dataset=dataset, condition=condition, table_name=args.name)
+
+    else:
+      raise ValueError("Unrecognised delete mode.")
 
   else:
     raise ValueError("Unrecognised mode: %s" % args.mode)
