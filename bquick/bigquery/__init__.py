@@ -12,7 +12,7 @@ from oauth2client.client import GoogleCredentials
 from urllib2 import HTTPError
 
 from bquick.bigquery import \
-    table_list_handler, table_delete_handler, table_copy_handler
+    table_list_handler, table_delete_handler, table_copy_handler, data_delete_handler
 from bquick.command_parser import \
     ListCommand, \
     ListRegexCommand, \
@@ -23,7 +23,11 @@ from bquick.command_parser import \
     DeleteWildcardCommand, \
     CopyFileCommand, \
     CopyWildcardCommand, \
-    CopyRegexCommand
+    CopyRegexCommand, \
+    DataDeleteFileCommand, \
+    DataDeleteNamedCommand, \
+    DataDeleteRegexCommand, \
+    DataDeleteWildcardCommand
 
 
 # Retry transport and file IO errors.
@@ -104,6 +108,32 @@ def copy_table(cp_command):
 
   else:
     raise ValueError("Unrecognised delete command.")
+
+
+def delete_data(ddel_command):
+  dataset = ddel_command.dataset
+  condition = ddel_command.condition
+
+  if isinstance(ddel_command, DataDeleteNamedCommand):
+    data_delete_handler.delete_data_by_name(
+        GOOGLE_BIGQUERY_CLIENT, dataset, condition, ddel_command.table_name)
+  elif isinstance(ddel_command, DataDeleteFileCommand):
+    data_delete_handler.delete_data_using_file(
+        GOOGLE_BIGQUERY_CLIENT, dataset, condition, ddel_command.delete_file)
+  elif isinstance(ddel_command, DataDeleteWildcardCommand):
+    data_delete_handler.delete_data_with_wildcard(GOOGLE_BIGQUERY_CLIENT,
+                                                  dataset,
+                                                  condition,
+                                                  ddel_command.table_prefix,
+                                                  ddel_command.start_date,
+                                                  ddel_command.end_date)
+  elif isinstance(ddel_command, DataDeleteRegexCommand):
+    data_delete_handler.delete_data_with_regex(GOOGLE_BIGQUERY_CLIENT,
+                                               dataset,
+                                               condition,
+                                               ddel_command.table_name_pattern)
+  else:
+    raise ValueError("Unrecognised command type.")
 
 
 def __get_bigquery_service():
