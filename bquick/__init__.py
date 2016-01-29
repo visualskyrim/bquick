@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from bquick.command_parser import get_command
-from bquick.bigquery import list_table, delete_table, copy_table
+from bquick.bigquery import list_table, delete_table, copy_table, delete_data
 
 
 def main():
@@ -17,6 +17,9 @@ def main():
       delete_table(command)
     elif mode == 'cp':
       copy_table(command)
+    elif mode == 'ddel':
+      delete_data(command)
 
   except Exception as e:
+    print str(e)
     raise e
