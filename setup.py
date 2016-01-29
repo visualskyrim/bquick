@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='bquick',
-      version='0.1.7',
+      version='0.1.8',
       description='The command line tool for BigQuery management.',
       url='http://github.com/visualskyrim/bquick',
       author='visualskyrim',
