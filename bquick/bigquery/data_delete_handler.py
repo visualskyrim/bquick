@@ -79,7 +79,12 @@ def __delete_data_process(bq_client, dataset, condition, table_name_list):
 
   # wait job to finish
   print "Wait for all temp tables are created."
-  utils.wait_all_job_finish(bq_client, job_table_map.keys())
+  should_proceed = utils.wait_all_job_finish(bq_client, job_table_map.keys())
+
+  if not should_proceed:
+    print "There are errors in the jobs of transfer remaining data."
+    print "Process will suspend."
+    return
 
   # TODO: validate the temp data
 

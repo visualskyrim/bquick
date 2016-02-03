@@ -26,14 +26,15 @@ def thruhold_jobs(bq_client, max_jobs=MAX_RUNNING_JOB, block_wait=JOB_BLOCK_WAIT
 
 
 def wait_all_job_finish(bq_client, job_id_list):
-
+  has_failure = False
   for job_id in job_id_list:
-    is_finished = __is_job_finished(bq_client, job_id)
+    is_finished, is_fail = __is_job_finished(bq_client, job_id)
     while not is_finished:
       time.sleep(2)
-      is_finished = __is_job_finished(bq_client, job_id)
+      is_finished, is_fail = __is_job_finished(bq_client, job_id)
+    has_failure = has_failure or is_fail
 
-  return True
+  return not has_failure
 
 
 def get_table_packages(table_list, package_size=JOB_LAUNCH_SIZE):
@@ -93,10 +94,21 @@ def __is_job_finished(bq_client, job_id):
   if 'state' not in job_status['status']:
     raise ValueError("Can't find status in job response.")
 
+  job_status = job_response['status']
+  is_fail = False
+  if 'errorResult' in job_status:
+    is_fail = True
+    error_result = job_status['errorResult']
+    if 'message' in error_result:
+      error_message = error_result['message']
+      print "Job [%s] failed: [%s]" % (job_id, error_message)
+    else:
+      error_message = ''
+
   if job_status['status']['state'] == "DONE":
-    return True
+    return True, is_fail
   else:
-    return False
+    return False, is_fail
 
 
 def __chunks(l, n):
